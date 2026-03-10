@@ -981,19 +981,21 @@ const Footer = () => (
 );
 
 /* ═══════════════════════════════════════════════════════════════
-   STORAGE HELPERS  (window.storage — artifact persistent API)
+   STORAGE HELPERS  (localStorage — Netlify va barcha brauzerda ishlaydi)
 ═══════════════════════════════════════════════════════════════ */
 const STORE_KEY = "maktab:appstate";
 
-async function loadState() {
+function loadState() {
   try {
-    const res = await window.storage.get(STORE_KEY);
-    return res ? JSON.parse(res.value) : null;
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch (_) { return null; }
 }
 
-async function saveState(state) {
-  try { await window.storage.set(STORE_KEY, JSON.stringify(state)); } catch (_) {}
+function saveState(state) {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  } catch (_) {}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1042,19 +1044,18 @@ export default function App() {
   const [profOpen,  setProfOpen]  = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
 
-  /* ── LOAD from storage on first mount ── */
+  /* ── LOAD from storage on first mount (sync localStorage) ── */
   useEffect(() => {
-    loadState().then(saved => {
-      if (saved) {
-        if (saved.news)      setNews(saved.news);
-        if (saved.users)     setUsers(saved.users);
-        if (saved.nextId)    setNextId(saved.nextId);
-        if (saved.user)      setUser(saved.user);
-        if (saved.bookmarks) setBookmarks(saved.bookmarks);
-        if (saved.notifs)    setNotifs(saved.notifs);
-      }
-      setReady(true);
-    });
+    const saved = loadState();
+    if (saved) {
+      if (saved.news)      setNews(saved.news);
+      if (saved.users)     setUsers(saved.users);
+      if (saved.nextId)    setNextId(saved.nextId);
+      if (saved.user)      setUser(saved.user);
+      if (saved.bookmarks) setBookmarks(saved.bookmarks);
+      if (saved.notifs)    setNotifs(saved.notifs);
+    }
+    setReady(true);
   }, []);
 
   /* ── SAVE to storage whenever any important state changes ── */
