@@ -64,6 +64,37 @@ const INIT_NEWS = [
   { id:5, title:"Yangi kutubxona ochildi",                 body:"Maktabimizda zamonaviy kutubxona va o'qish zali ochildi. 5000 dan ortiq kitob, elektron resurslar va qulay o'rganish muhiti yaratildi.", cat:"tadbir", emoji:"📚", date:"2026-02-14", likes:[], comments:[], views:201 },
 ];
 
+
+/* ═══════════════════════════════════════════════════════════════
+   DARS JADVALI SEED DATA
+═══════════════════════════════════════════════════════════════ */
+const DAYS = ["Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba"];
+const INIT_SCHEDULE = [
+  { day:"Dushanba",    lessons:[{t:"08:00",sub:"Matematika",room:"201",teacher:"N.Toshmatov"},{t:"09:00",sub:"O'zbek tili",room:"105",teacher:"Z.Xoliqova"},{t:"10:00",sub:"Tarix",room:"301",teacher:"B.Normatov"},{t:"11:00",sub:"Fizika",room:"214",teacher:"D.Yusupov"},{t:"12:00",sub:"Informatika",room:"Lab-1",teacher:"A.Rahimov"}]},
+  { day:"Seshanba",    lessons:[{t:"08:00",sub:"Biologiya",room:"302",teacher:"M.Hasanova"},{t:"09:00",sub:"Kimyo",room:"Lab-2",teacher:"F.Tursunov"},{t:"10:00",sub:"Matematika",room:"201",teacher:"N.Toshmatov"},{t:"11:00",sub:"Ingliz tili",room:"108",teacher:"G.Mirzayeva"},{t:"12:00",sub:"Jismoniy",room:"Sport",teacher:"K.Xasanov"}]},
+  { day:"Chorshanba",  lessons:[{t:"08:00",sub:"Fizika",room:"214",teacher:"D.Yusupov"},{t:"09:00",sub:"Tarix",room:"301",teacher:"B.Normatov"},{t:"10:00",sub:"O'zbek adabiyoti",room:"105",teacher:"Z.Xoliqova"},{t:"11:00",sub:"Matematika",room:"201",teacher:"N.Toshmatov"},{t:"12:00",sub:"Informatika",room:"Lab-1",teacher:"A.Rahimov"}]},
+  { day:"Payshanba",   lessons:[{t:"08:00",sub:"Kimyo",room:"Lab-2",teacher:"F.Tursunov"},{t:"09:00",sub:"Ingliz tili",room:"108",teacher:"G.Mirzayeva"},{t:"10:00",sub:"Biologiya",room:"302",teacher:"M.Hasanova"},{t:"11:00",sub:"Geografiya",room:"303",teacher:"S.Alieva"},{t:"12:00",sub:"Musiqiy san'at",room:"115",teacher:"R.Nazarov"}]},
+  { day:"Juma",        lessons:[{t:"08:00",sub:"O'zbek tili",room:"105",teacher:"Z.Xoliqova"},{t:"09:00",sub:"Matematika",room:"201",teacher:"N.Toshmatov"},{t:"10:00",sub:"Fizika",room:"214",teacher:"D.Yusupov"},{t:"11:00",sub:"Tarix",room:"301",teacher:"B.Normatov"},{t:"12:00",sub:"Sinf soati",room:"105",teacher:"Z.Xoliqova"}]},
+  { day:"Shanba",      lessons:[{t:"08:00",sub:"Ingliz tili",room:"108",teacher:"G.Mirzayeva"},{t:"09:00",sub:"Matematika",room:"201",teacher:"N.Toshmatov"},{t:"10:00",sub:"Jismoniy",room:"Sport",teacher:"K.Xasanov"},{t:"11:00",sub:"Informatika",room:"Lab-1",teacher:"A.Rahimov"}]},
+];
+
+const SUBJECT_COLORS = {
+  "Matematika":  { bg:"#dbeafe", color:"#1d4ed8", icon:"📐" },
+  "O'zbek tili": { bg:"#d1fae5", color:"#065f46", icon:"📝" },
+  "O'zbek adabiyoti":{ bg:"#d1fae5", color:"#065f46", icon:"📖" },
+  "Tarix":       { bg:"#fef3c7", color:"#92400e", icon:"🏛️" },
+  "Fizika":      { bg:"#ede9fe", color:"#5b21b6", icon:"⚛️" },
+  "Informatika": { bg:"#cffafe", color:"#0e7490", icon:"💻" },
+  "Biologiya":   { bg:"#dcfce7", color:"#15803d", icon:"🌿" },
+  "Kimyo":       { bg:"#fce7f3", color:"#9d174d", icon:"🧪" },
+  "Ingliz tili": { bg:"#fef9c3", color:"#854d0e", icon:"🇬🇧" },
+  "Jismoniy":    { bg:"#fee2e2", color:"#991b1b", icon:"⚽" },
+  "Geografiya":  { bg:"#e0f2fe", color:"#075985", icon:"🌍" },
+  "Musiqiy san\'at":{ bg:"#fdf4ff", color:"#7e22ce", icon:"🎵" },
+  "Sinf soati":  { bg:"#f0fdf4", color:"#166534", icon:"🏫" },
+};
+const getSC = (sub) => SUBJECT_COLORS[sub] || { bg:"#f1f5f9", color:"#475569", icon:"📚" };
+
 /* ═══════════════════════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════════════════════ */
@@ -137,7 +168,7 @@ const Badge = ({ cfg }) => cfg
 /* ═══════════════════════════════════════════════════════════════
    HEADER
 ═══════════════════════════════════════════════════════════════ */
-const Header = ({ user, notifications, onLogin, onSignup, onProfile, onLogout, onAdminOpen, onNotifOpen }) => {
+const Header = ({ user, notifications, onLogin, onSignup, onProfile, onLogout, onAdminOpen, onNotifOpen, onScheduleOpen }) => {
   const [lang, setLang] = useState("UZ");
   const [ddOpen, setDdOpen] = useState(false);
   const ddRef = useRef();
@@ -176,6 +207,10 @@ const Header = ({ user, notifications, onLogin, onSignup, onProfile, onLogout, o
               onMouseLeave={e=>e.target.style.background="none"}
             >{l}</a>
           ))}
+          <button onClick={onScheduleOpen} style={{ color:"rgba(255,255,255,.9)", background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.25)", fontSize:13, fontWeight:600, padding:"7px 13px", borderRadius:6, cursor:"pointer", transition:".2s" }}
+            onMouseEnter={e=>e.target.style.background="rgba(255,255,255,.22)"}
+            onMouseLeave={e=>e.target.style.background="rgba(255,255,255,.12)"}
+          >📅 Jadval</button>
         </nav>
         <div style={{ display:"flex", gap:8, alignItems:"center" }}>
           {user ? (
@@ -263,13 +298,13 @@ const Hero = ({ user, onSignup }) => (
 /* ═══════════════════════════════════════════════════════════════
    QUICK LINKS
 ═══════════════════════════════════════════════════════════════ */
-const QuickLinks = ({ onAction }) => (
+const QuickLinks = ({ onQuickAction }) => (
   <section id="services" style={{ background:`linear-gradient(135deg,${C.bd},#00509e)`, padding:"48px 0" }}>
     <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 24px" }}>
       <div style={{ fontFamily:"'Exo 2',sans-serif", fontSize:22, fontWeight:700, color:"#fff", marginBottom:24, textAlign:"center" }}>Tezkor havolalar</div>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14 }}>
         {[["📊","Elektron jurnal","Baholar va davomatlar"],["📅","Dars jadvali","Haftalik jadval"],["📚","Kutubxona","Elektron darsliklar"],["💬","Xabarlar","O'qituvchi bilan aloqa"]].map(([ic,l,d],i)=>(
-          <div key={i} onClick={onAction} style={{ background:"rgba(255,255,255,.1)", border:"1px solid rgba(255,255,255,.2)", borderRadius:12, padding:"22px 14px", textAlign:"center", cursor:"pointer", transition:".25s" }}
+          <div key={i} onClick={()=>onQuickAction(i)} style={{ background:"rgba(255,255,255,.1)", border:"1px solid rgba(255,255,255,.2)", borderRadius:12, padding:"22px 14px", textAlign:"center", cursor:"pointer", transition:".25s" }}
             onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.2)"; e.currentTarget.style.transform="translateY(-3px)"; }}
             onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.1)"; e.currentTarget.style.transform="none"; }}
           >
@@ -787,9 +822,108 @@ const AuthModal = ({ open, tab, users, onClose, onSwitch, onLoginOk, onAddUser }
 };
 
 /* ═══════════════════════════════════════════════════════════════
+   ADMIN SUPPORT PANEL (inside admin)
+═══════════════════════════════════════════════════════════════ */
+const AdminSupportPanel = ({ chats, onReply }) => {
+  const [selUser, setSelUser] = useState(null);
+  const [reply, setReply] = useState("");
+  const endRef = useRef(null);
+
+  const thread = selUser ? chats.find(c=>c.userId===selUser) : null;
+  const unreadTotal = chats.reduce((s,c)=>s+c.messages.filter(m=>m.from==="user"&&!m.read).length, 0);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior:"smooth" });
+  }, [thread?.messages?.length, selUser]);
+
+  const sendReply = () => {
+    if (!reply.trim() || !selUser) return;
+    onReply(selUser, reply.trim());
+    setReply("");
+  };
+
+  return (
+    <div style={{ display:"grid", gridTemplateColumns:"280px 1fr", gap:20, height:580 }}>
+      {/* User list */}
+      <Card style={{ padding:0, overflow:"hidden", display:"flex", flexDirection:"column" }}>
+        <div style={{ padding:"14px 16px", borderBottom:`1px solid ${C.gm}`, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <div style={{ fontWeight:700, fontSize:14, color:C.td }}>💬 Chatlar</div>
+          {unreadTotal>0 && <span style={{ background:"#ef4444", color:"#fff", fontSize:11, fontWeight:700, padding:"2px 8px", borderRadius:20 }}>{unreadTotal} yangi</span>}
+        </div>
+        <div style={{ overflowY:"auto", flex:1 }}>
+          {chats.length===0 && <div style={{ padding:20, textAlign:"center", color:C.gt, fontSize:13 }}>Hali xabar yo'q</div>}
+          {chats.map(c => {
+            const last = c.messages[c.messages.length-1];
+            const unread = c.messages.filter(m=>m.from==="user"&&!m.read).length;
+            return (
+              <div key={c.userId} onClick={()=>setSelUser(c.userId)} style={{ padding:"12px 16px", cursor:"pointer", borderBottom:`1px solid ${C.gm}`, background:selUser===c.userId?"#eff6ff":"#fff", transition:".15s" }}
+                onMouseEnter={e=>{ if(selUser!==c.userId) e.currentTarget.style.background=C.gl; }}
+                onMouseLeave={e=>{ if(selUser!==c.userId) e.currentTarget.style.background="#fff"; }}
+              >
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+                  <div style={{ fontWeight:unread>0?700:500, fontSize:13, color:C.td }}>{c.userName}</div>
+                  {unread>0 && <span style={{ background:C.bm, color:"#fff", fontSize:9, fontWeight:700, padding:"2px 6px", borderRadius:20 }}>{unread}</span>}
+                </div>
+                <div style={{ fontSize:11, color:C.gt, marginTop:3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                  {last ? `${last.from==="admin"?"Siz: ":""}${last.text}` : "Xabar yo'q"}
+                </div>
+                {last && <div style={{ fontSize:10, color:C.gt, marginTop:2 }}>{last.time}</div>}
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+
+      {/* Chat window */}
+      {selUser && thread ? (
+        <Card style={{ padding:0, overflow:"hidden", display:"flex", flexDirection:"column" }}>
+          <div style={{ padding:"13px 18px", borderBottom:`1px solid ${C.gm}`, background:C.gl, display:"flex", alignItems:"center", gap:10 }}>
+            <div style={{ width:34, height:34, borderRadius:"50%", background:avatarColor(thread.userName), display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:700, fontSize:14 }}>
+              {thread.userName.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div style={{ fontWeight:700, fontSize:14, color:C.td }}>{thread.userName}</div>
+              <div style={{ fontSize:11, color:C.gt }}>{thread.userId} · {thread.messages.length} xabar</div>
+            </div>
+          </div>
+          <div style={{ flex:1, overflowY:"auto", padding:16, display:"flex", flexDirection:"column", gap:8, background:"#f8fafc" }}>
+            {thread.messages.map((m,i)=>(
+              <div key={i} style={{ display:"flex", flexDirection:"column", alignItems:m.from==="admin"?"flex-end":"flex-start" }}>
+                <div style={{ maxWidth:"75%", padding:"9px 13px", borderRadius:m.from==="admin"?"14px 14px 4px 14px":"14px 14px 14px 4px", background:m.from==="admin"?C.bm:"#fff", color:m.from==="admin"?"#fff":C.td, fontSize:13, border:m.from==="admin"?"none":`1px solid ${C.gm}`, boxShadow:"0 1px 4px rgba(0,0,0,.07)" }}>
+                  {m.text}
+                </div>
+                <div style={{ fontSize:10, color:C.gt, marginTop:2, paddingLeft:4, paddingRight:4 }}>
+                  {m.from==="admin"?"Admin · ":""}{m.time}
+                </div>
+              </div>
+            ))}
+            <div ref={endRef}/>
+          </div>
+          <div style={{ padding:"12px 14px", borderTop:`1px solid ${C.gm}`, display:"flex", gap:8, background:"#fff" }}>
+            <input value={reply} onChange={e=>setReply(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sendReply()} placeholder="Javob yozing..." style={{ flex:1, padding:"9px 12px", border:`1.5px solid ${C.gm}`, borderRadius:10, fontSize:13, outline:"none" }}
+              onFocus={e=>e.target.style.borderColor=C.bm}
+              onBlur={e=>e.target.style.borderColor=C.gm}
+            />
+            <button onClick={sendReply} style={{ background:C.bm, color:"#fff", border:"none", padding:"9px 18px", borderRadius:10, cursor:"pointer", fontSize:13, fontWeight:700 }}>Yuborish ➤</button>
+          </div>
+        </Card>
+      ) : (
+        <Card style={{ display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <div style={{ textAlign:"center", color:C.gt }}>
+            <div style={{ fontSize:48, marginBottom:12 }}>💬</div>
+            <div style={{ fontSize:15, fontWeight:600 }}>Chat tanlang</div>
+            <div style={{ fontSize:13, marginTop:4 }}>Chap tomondagi ro'yxatdan foydalanuvchi tanlang</div>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════
    ADMIN PANEL
 ═══════════════════════════════════════════════════════════════ */
-const AdminPanel = ({ news, users, onAdd, onDel, onExit }) => {
+const AdminPanel = ({ news, users, chats, schedule, onAdd, onDel, onReplySupport, onUpdateSchedule, onExit }) => {
   const [title, setTitle] = useState(""); const [body2, setBody] = useState("");
   const [cat,   setCat]   = useState("yangilik"); const [emoji, setEmoji] = useState("📰");
   const [ok,    setOk]    = useState(false);
@@ -822,8 +956,8 @@ const AdminPanel = ({ news, users, onAdd, onDel, onExit }) => {
             </div>
           ))}
         </div>
-        <div style={{ display:"flex", gap:8, marginBottom:22 }}>
-          {[["news","📰 Yangiliklar"],["users","👥 Foydalanuvchilar"],["stats","📊 Statistika"]].map(([v,l])=>(
+        <div style={{ display:"flex", gap:8, marginBottom:22, flexWrap:"wrap" }}>
+          {[["news","📰 Yangiliklar"],["users","👥 Foydalanuvchilar"],["schedule","📅 Dars Jadvali"],["support","💬 Support"],["stats","📊 Statistika"]].map(([v,l])=>(
             <button key={v} onClick={()=>setATab(v)} style={{ background:aTab===v?C.bm:"#fff", color:aTab===v?"#fff":C.gt, border:`1.5px solid ${aTab===v?C.bm:C.gm}`, padding:"9px 20px", borderRadius:22, fontSize:13, fontWeight:600, cursor:"pointer", transition:".2s" }}>{l}</button>
           ))}
         </div>
@@ -914,6 +1048,40 @@ const AdminPanel = ({ news, users, onAdd, onDel, onExit }) => {
           </Card>
         )}
 
+
+        {aTab==="schedule" && (
+          <div>
+            <Card style={{ marginBottom:20 }}>
+              <div style={{ fontFamily:"'Exo 2',sans-serif", fontSize:17, fontWeight:700, color:C.td, marginBottom:6 }}>📅 Dars jadvali boshqaruvi</div>
+              <div style={{ fontSize:13, color:C.gt, marginBottom:16 }}>Jadvallarni ko'rish va tahrirlash uchun <strong style={{color:C.bm}}>Dars Jadvali</strong> modal oynasini ishlating.</div>
+              <Btn onClick={()=>alert("Jadval modali asosiy sahifada ham ko'rinadi. Admin rejimida u yerdan tahrirlay olasiz.")} variant="ghost" style={{ fontSize:13 }}>📅 Jadval ko'rish (asosiy saytda)</Btn>
+            </Card>
+            {DAYS.map((day,di) => {
+              const d = schedule[di] || { day, lessons:[] };
+              return (
+                <Card key={day} style={{ marginBottom:14 }}>
+                  <div style={{ fontFamily:"'Exo 2',sans-serif", fontSize:16, fontWeight:700, color:C.td, marginBottom:12 }}>{day} — {d.lessons.length} ta dars</div>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+                    {d.lessons.map((l,i) => {
+                      const sc = getSC(l.sub);
+                      return (
+                        <div key={i} style={{ background:sc.bg, border:`1px solid ${sc.color}33`, borderRadius:8, padding:"7px 12px", fontSize:12 }}>
+                          <span style={{ fontWeight:700, color:sc.color }}>{l.t}</span> · {sc.icon} {l.sub} · {l.room}-xona
+                        </div>
+                      );
+                    })}
+                    {d.lessons.length===0 && <span style={{ fontSize:13, color:C.gt }}>Dars yo'q</span>}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+
+        {aTab==="support" && (
+          <AdminSupportPanel chats={chats} onReply={onReplySupport}/>
+        )}
+
         {aTab==="stats" && (
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:20 }}>
             <Card>
@@ -947,6 +1115,213 @@ const AdminPanel = ({ news, users, onAdd, onDel, onExit }) => {
         )}
       </div>
     </div>
+  );
+};
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DARS JADVALI MODALI / SAHIFASI
+═══════════════════════════════════════════════════════════════ */
+const ScheduleModal = ({ schedule, onClose, onUpdateSchedule, isAdmin }) => {
+  const today = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
+  const todayIdx = today === 0 ? 4 : Math.min(today - 1, 5); // clamp to 0-5
+  const [selDay, setSelDay] = useState(todayIdx);
+  const [editMode, setEditMode] = useState(false);
+  const [editSched, setEditSched] = useState(schedule);
+  const [form, setForm] = useState({ t:"", sub:"", room:"", teacher:"" });
+
+  const dayData = editSched[selDay] || { day:DAYS[selDay], lessons:[] };
+
+  const addLesson = () => {
+    if (!form.t || !form.sub) return;
+    const updated = editSched.map((d,i) => i===selDay
+      ? { ...d, lessons:[...d.lessons, form].sort((a,b)=>a.t.localeCompare(b.t)) }
+      : d
+    );
+    setEditSched(updated);
+    setForm({ t:"", sub:"", room:"", teacher:"" });
+  };
+
+  const removeLesson = (li) => {
+    const updated = editSched.map((d,i) => i===selDay
+      ? { ...d, lessons:d.lessons.filter((_,idx)=>idx!==li) }
+      : d
+    );
+    setEditSched(updated);
+  };
+
+  const save = () => {
+    onUpdateSchedule(editSched);
+    setEditMode(false);
+  };
+
+  return (
+    <div onClick={e=>e.target===e.currentTarget&&onClose()} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.6)", zIndex:1500, display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(4px)", padding:16 }}>
+      <div className="scale-in" style={{ background:"#fff", borderRadius:18, width:"100%", maxWidth:860, maxHeight:"92vh", overflow:"hidden", display:"flex", flexDirection:"column", boxShadow:"0 24px 80px rgba(0,0,0,.3)" }}>
+        {/* Header */}
+        <div style={{ background:`linear-gradient(135deg,${C.bd},${C.bm})`, padding:"20px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
+          <div>
+            <div style={{ fontFamily:"'Exo 2',sans-serif", fontSize:20, fontWeight:800, color:"#fff" }}>📅 Dars Jadvali</div>
+            <div style={{ fontSize:12, color:"rgba(255,255,255,.7)", marginTop:2 }}>2025-2026 o'quv yili</div>
+          </div>
+          <div style={{ display:"flex", gap:8 }}>
+            {isAdmin && (
+              editMode
+                ? <>
+                    <button onClick={save} style={{ background:"#22c55e", color:"#fff", border:"none", padding:"7px 16px", borderRadius:7, fontSize:13, fontWeight:700, cursor:"pointer" }}>💾 Saqlash</button>
+                    <button onClick={()=>{ setEditSched(schedule); setEditMode(false); }} style={{ background:"rgba(255,255,255,.2)", color:"#fff", border:"1px solid rgba(255,255,255,.3)", padding:"7px 16px", borderRadius:7, fontSize:13, cursor:"pointer" }}>Bekor</button>
+                  </>
+                : <button onClick={()=>setEditMode(true)} style={{ background:"rgba(255,255,255,.2)", color:"#fff", border:"1px solid rgba(255,255,255,.3)", padding:"7px 16px", borderRadius:7, fontSize:13, fontWeight:600, cursor:"pointer" }}>✏️ Tahrirlash</button>
+            )}
+            <button onClick={onClose} style={{ background:"rgba(255,255,255,.2)", border:"none", color:"#fff", width:32, height:32, borderRadius:"50%", cursor:"pointer", fontSize:16 }}>✕</button>
+          </div>
+        </div>
+        {/* Day tabs */}
+        <div style={{ display:"flex", overflowX:"auto", borderBottom:`1px solid ${C.gm}`, flexShrink:0, background:"#fff" }}>
+          {DAYS.map((d,i) => (
+            <button key={d} onClick={()=>setSelDay(i)} style={{ padding:"12px 20px", border:"none", borderBottom:selDay===i?`3px solid ${C.bm}`:"3px solid transparent", background:"none", color:selDay===i?C.bm:C.gt, fontWeight:selDay===i?700:500, fontSize:14, cursor:"pointer", whiteSpace:"nowrap", transition:".2s" }}>
+              {d}
+              {i===todayIdx && <span style={{ marginLeft:5, background:"#22c55e", color:"#fff", fontSize:9, padding:"1px 6px", borderRadius:10, fontWeight:700 }}>bugun</span>}
+            </button>
+          ))}
+        </div>
+        {/* Lessons */}
+        <div style={{ overflowY:"auto", padding:24, flex:1 }}>
+          {dayData.lessons.length === 0 && !editMode && (
+            <div style={{ textAlign:"center", padding:"40px 0", color:C.gt }}>
+              <div style={{ fontSize:48, marginBottom:12 }}>🎉</div>
+              <div style={{ fontSize:16, fontWeight:600 }}>Bu kuni dars yo'q!</div>
+            </div>
+          )}
+          <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            {dayData.lessons.map((l,i)=>{
+              const sc = getSC(l.sub);
+              return (
+                <div key={i} style={{ display:"flex", gap:14, alignItems:"center", background:sc.bg, border:`1px solid ${sc.color}22`, borderRadius:12, padding:"14px 18px" }}>
+                  <div style={{ textAlign:"center", minWidth:52 }}>
+                    <div style={{ fontFamily:"'Exo 2',sans-serif", fontSize:16, fontWeight:800, color:sc.color }}>{l.t}</div>
+                    <div style={{ fontSize:10, color:sc.color, opacity:.7 }}>{i+1}-dars</div>
+                  </div>
+                  <div style={{ fontSize:24 }}>{getSC(l.sub).icon}</div>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontFamily:"'Exo 2',sans-serif", fontSize:15, fontWeight:700, color:C.td }}>{l.sub}</div>
+                    <div style={{ fontSize:12, color:C.gt, marginTop:2 }}>👨‍🏫 {l.teacher} · 🏛️ {l.room}-xona</div>
+                  </div>
+                  <span style={{ fontSize:11, fontWeight:700, padding:"3px 10px", borderRadius:20, background:"rgba(255,255,255,.6)", color:sc.color }}>{l.room}</span>
+                  {editMode && (
+                    <button onClick={()=>removeLesson(i)} style={{ background:"#fee2e2", color:"#dc2626", border:"1px solid #fca5a5", width:28, height:28, borderRadius:"50%", cursor:"pointer", fontSize:13, display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {/* Add lesson form (admin only, edit mode) */}
+          {editMode && isAdmin && (
+            <div style={{ marginTop:20, background:C.gl, borderRadius:12, padding:18, border:`1px dashed ${C.bm}` }}>
+              <div style={{ fontWeight:700, fontSize:14, color:C.td, marginBottom:14 }}>➕ Yangi dars qo'shish</div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 2fr 1fr 2fr", gap:10 }}>
+                <Inp label="VAQT" value={form.t} onChange={e=>setForm(f=>({...f,t:e.target.value}))} placeholder="08:00"/>
+                <Inp label="FAN" value={form.sub} onChange={e=>setForm(f=>({...f,sub:e.target.value}))} placeholder="Matematika"/>
+                <Inp label="XONA" value={form.room} onChange={e=>setForm(f=>({...f,room:e.target.value}))} placeholder="201"/>
+                <Inp label="O'QITUVCHI" value={form.teacher} onChange={e=>setForm(f=>({...f,teacher:e.target.value}))} placeholder="Familiya I.O."/>
+              </div>
+              <Btn variant="success" onClick={addLesson} small>➕ Qo'shish</Btn>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   SUPPORT WIDGET  (floating chat bubble)
+═══════════════════════════════════════════════════════════════ */
+const SupportWidget = ({ user, chats, onSendMsg, onClose, open, onOpen }) => {
+  const [text, setText] = useState("");
+  const messagesEndRef = useRef(null);
+
+  // Get this user's chat thread
+  const myThread = user
+    ? (chats.find(c => c.userId === user.email) || { messages:[], userId:user.email, userName:`${user.first} ${user.last}` })
+    : null;
+
+  useEffect(() => {
+    if (open && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior:"smooth" });
+    }
+  }, [open, myThread?.messages?.length]);
+
+  const send = () => {
+    if (!text.trim() || !user) return;
+    onSendMsg(user.email, `${user.first} ${user.last}`, text.trim(), "user");
+    setText("");
+  };
+
+  const unreadCount = myThread ? myThread.messages.filter(m=>m.from==="admin"&&!m.read).length : 0;
+
+  return (
+    <>
+      {/* Floating button */}
+      <button onClick={open?onClose:onOpen} style={{ position:"fixed", bottom:24, right:24, width:56, height:56, borderRadius:"50%", background:`linear-gradient(135deg,${C.bm},${C.ba})`, border:"none", cursor:"pointer", boxShadow:"0 4px 20px rgba(0,82,204,.4)", zIndex:7000, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, transition:".3s", transform:open?"scale(0.9)":"scale(1)" }}>
+        {open ? "✕" : "💬"}
+        {!open && unreadCount > 0 && (
+          <span style={{ position:"absolute", top:-2, right:-2, background:"#ef4444", color:"#fff", fontSize:10, fontWeight:700, borderRadius:"50%", width:18, height:18, display:"flex", alignItems:"center", justifyContent:"center", border:"2px solid #fff" }}>{unreadCount}</span>
+        )}
+      </button>
+
+      {/* Chat window */}
+      {open && (
+        <div className="scale-in" style={{ position:"fixed", bottom:92, right:24, width:340, maxHeight:480, background:"#fff", borderRadius:16, boxShadow:"0 8px 40px rgba(0,0,0,.2)", zIndex:7000, display:"flex", flexDirection:"column", border:`1px solid ${C.gm}`, overflow:"hidden" }}>
+          {/* Header */}
+          <div style={{ background:`linear-gradient(135deg,${C.bd},${C.bm})`, padding:"14px 16px", flexShrink:0 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+              <div style={{ width:36, height:36, borderRadius:"50%", background:"rgba(255,255,255,.2)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18 }}>🛡️</div>
+              <div>
+                <div style={{ fontFamily:"'Exo 2',sans-serif", fontWeight:700, color:"#fff", fontSize:14 }}>Maktab Supporti</div>
+                <div style={{ fontSize:11, color:"rgba(255,255,255,.7)" }}>🟢 Onlayn · Odatda 1 soat ichida javob</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div style={{ flex:1, overflowY:"auto", padding:14, display:"flex", flexDirection:"column", gap:8, background:"#f8fafc" }}>
+            {!user ? (
+              <div style={{ textAlign:"center", padding:"30px 16px" }}>
+                <div style={{ fontSize:40, marginBottom:10 }}>🔒</div>
+                <div style={{ fontSize:13, color:C.gt }}>Support bilan suhbatlashish uchun <strong style={{color:C.bm}}>tizimga kiring</strong></div>
+              </div>
+            ) : myThread && myThread.messages.length === 0 ? (
+              <div style={{ textAlign:"center", padding:"20px 12px" }}>
+                <div style={{ fontSize:36, marginBottom:8 }}>👋</div>
+                <div style={{ fontSize:13, color:C.gt, lineHeight:1.6 }}>Salom! Qanday yordam kerak? Savol yoki muammoingizni yozing, tez javob beramiz.</div>
+              </div>
+            ) : (
+              myThread?.messages?.map((m,i) => (
+                <div key={i} style={{ display:"flex", flexDirection:"column", alignItems:m.from==="user"?"flex-end":"flex-start" }}>
+                  <div style={{ maxWidth:"80%", padding:"9px 13px", borderRadius:m.from==="user"?"14px 14px 4px 14px":"14px 14px 14px 4px", background:m.from==="user"?C.bm:"#fff", color:m.from==="user"?"#fff":C.td, fontSize:13, boxShadow:"0 1px 4px rgba(0,0,0,.08)", border:m.from==="user"?"none":`1px solid ${C.gm}` }}>
+                    {m.text}
+                  </div>
+                  <div style={{ fontSize:10, color:C.gt, marginTop:3, paddingLeft:4, paddingRight:4 }}>{m.time}</div>
+                </div>
+              ))
+            )}
+            <div ref={messagesEndRef}/>
+          </div>
+
+          {/* Input */}
+          {user && (
+            <div style={{ padding:"10px 12px", borderTop:`1px solid ${C.gm}`, display:"flex", gap:8, flexShrink:0, background:"#fff" }}>
+              <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Xabar yozing..." style={{ flex:1, padding:"9px 12px", border:`1.5px solid ${C.gm}`, borderRadius:10, fontSize:13, outline:"none", background:C.gl }}
+                onFocus={e=>{ e.target.style.borderColor=C.bm; e.target.style.background="#fff"; }}
+                onBlur={e =>{ e.target.style.borderColor=C.gm; e.target.style.background=C.gl; }}
+              />
+              <button onClick={send} style={{ background:C.bm, color:"#fff", border:"none", width:38, height:38, borderRadius:10, cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center" }}>➤</button>
+            </div>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 
@@ -1035,8 +1410,12 @@ export default function App() {
   const [users,     setUsers]     = useState([]);
   const [nextId,    setNextId]    = useState(6);
   const [user,      setUser]      = useState(null);
-  const [bookmarks, setBookmarks] = useState([]);
-  const [notifs,    setNotifs]    = useState(DEFAULT_NOTIFS);
+  const [bookmarks, setBookmarks]   = useState([]);
+  const [notifs,    setNotifs]     = useState(DEFAULT_NOTIFS);
+  const [schedule,  setSchedule]   = useState(INIT_SCHEDULE);
+  const [chats,     setChats]      = useState([]);
+  const [supportOpen, setSupportOpen] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
 
   /* ── UI state (not persisted) ── */
   const [modal,     setModal]     = useState(null);
@@ -1065,15 +1444,42 @@ export default function App() {
     if (!ready) return; // Don't save before initial load finishes
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      saveState({ news, users, nextId, user, bookmarks, notifs });
+      saveState({ news, users, nextId, user, bookmarks, notifs, schedule, chats });
     }, 600);
     return () => clearTimeout(saveTimer.current);
-  }, [news, users, nextId, user, bookmarks, notifs, ready]);
+  }, [news, users, nextId, user, bookmarks, notifs, schedule, chats, ready]);
 
   /* ── Notification helper ── */
   const addNotif = useCallback((icon, text) => {
     setNotifs(prev => [{ icon, text, time: "Hozirgina", read: false }, ...prev.slice(0, 49)]);
   }, []);
+
+  /* ── Support / Schedule / Chat Handlers ── */
+  const handleSendSupportMsg = (userId, userName, text, from) => {
+    setChats(prev => {
+      const exists = prev.find(c=>c.userId===userId);
+      const msg = { text, from, time: new Date().toLocaleTimeString("uz-UZ",{hour:"2-digit",minute:"2-digit"}), read:false };
+      if (exists) {
+        return prev.map(c=>c.userId===userId ? { ...c, messages:[...c.messages, msg] } : c);
+      }
+      return [...prev, { userId, userName, messages:[msg] }];
+    });
+  };
+
+  const handleAdminReply = (userId, text) => {
+    setChats(prev => prev.map(c => {
+      if (c.userId !== userId) return c;
+      const msg = { text, from:"admin", time: new Date().toLocaleTimeString("uz-UZ",{hour:"2-digit",minute:"2-digit"}), read:false };
+      // mark user messages as read
+      const updated = c.messages.map(m=>m.from==="user"?{...m,read:true}:m);
+      return { ...c, messages:[...updated, msg] };
+    }));
+  };
+
+  const handleUpdateSchedule = (newSched) => {
+    setSchedule(newSched);
+    addNotif("📅", "Dars jadvali yangilandi");
+  };
 
   /* ── Handlers ── */
   const handleLogin = (loggedUser) => {
@@ -1095,7 +1501,7 @@ export default function App() {
     setAdminOpen(false);
     setProfOpen(false);
     // Save immediately on logout so session is cleared
-    saveState({ news, users, nextId, user: null, bookmarks: [], notifs });
+    saveState({ news, users, nextId, user: null, bookmarks: [], notifs, schedule, chats });
   };
 
   const handleUpdateUser = (updated) => {
@@ -1168,8 +1574,9 @@ export default function App() {
 
       {adminOpen ? (
         <AdminPanel
-          news={news} users={users}
+          news={news} users={users} chats={chats} schedule={schedule}
           onAdd={handleAddNews} onDel={handleDeleteNews}
+          onReplySupport={handleAdminReply} onUpdateSchedule={handleUpdateSchedule}
           onExit={() => setAdminOpen(false)}
         />
       ) : (
@@ -1183,9 +1590,14 @@ export default function App() {
             onLogout={handleLogout}
             onAdminOpen={() => setAdminOpen(true)}
             onNotifOpen={() => setNotifOpen(true)}
+            onScheduleOpen={() => setScheduleOpen(true)}
           />
           <Hero user={user} onSignup={() => setModal("signup")}/>
-          <QuickLinks onAction={() => { if (!user) setModal("login"); }}/>
+          <QuickLinks onQuickAction={(i) => {
+            if (i===1) { setScheduleOpen(true); }
+            else if (i===3) { if (!user) setModal("login"); else setSupportOpen(v=>!v); }
+            else { if (!user) setModal("login"); }
+          }}/>
           <NewsSection
             news={news}
             user={user}
@@ -1219,6 +1631,22 @@ export default function App() {
           {notifOpen && (
             <NotifPanel notifications={notifs} onRead={readNotif} onClose={() => setNotifOpen(false)}/>
           )}
+          {scheduleOpen && (
+            <ScheduleModal
+              schedule={schedule}
+              isAdmin={user?.role==="admin"}
+              onClose={() => setScheduleOpen(false)}
+              onUpdateSchedule={handleUpdateSchedule}
+            />
+          )}
+          <SupportWidget
+            user={user}
+            chats={chats}
+            open={supportOpen}
+            onOpen={() => setSupportOpen(true)}
+            onClose={() => setSupportOpen(false)}
+            onSendMsg={handleSendSupportMsg}
+          />
         </>
       )}
     </>
